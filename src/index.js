@@ -52,9 +52,18 @@ document.body.appendChild( renderer.domElement );
 // renderer.setSize( window.innerWidth, window.innerHeight );
 // document.body.appendChild( renderer.domElement );
 
-var orbit = new THREE.OrbitControls( camera, renderer.domElement );
-orbit.enablezoom = false;
-// new THREE.FirstPersonControls(camera, renderer.domElement);
+// var orbit = new THREE.OrbitControls( camera, renderer.domElement );
+// orbit.enablezoom = false;
+var camControls = new THREE.FirstPersonControls(camera);
+camControls.lookSpeed = 0.4;
+camControls.movementSpeed = 20;
+camControls.noFly = true;
+camControls.lookVertical = true;
+camControls.constrainVertical = true;
+camControls.verticalMin = 1.0;
+camControls.verticalMax = 2.0;
+camControls.lon = -150;
+camControls.lat = 120;
 
 var lights = [];
 lights[ 0 ] = new THREE.PointLight( 0xffffff, 1, 0 );
@@ -101,21 +110,26 @@ BoxBufferGeometry(mesh);
 
 scene.add( mesh );
 
-var prevFog = false;
+ var stats = new THREE.Stats();
+ stats.showPanel( 1 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+ document.body.appendChild( stats.dom );
 
+var prevFog = false;
+var clock = new THREE.Clock();
 var render = function () {
 
     requestAnimationFrame( render );
 
     //if ( ! options.fixed ) {
-
+         stats.begin();
         mesh.rotation.x += 0.005;
         mesh.rotation.y += 0.005;
 
     //}
 
+    camControls.update(clock.getDelta());
     renderer.render( scene, camera );
-
+     stats.end();
 };
 
 window.addEventListener( 'resize', function () {

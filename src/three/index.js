@@ -1,7 +1,11 @@
 import * as THREE from 'three';
+import Stats from './stats';
 global.THREE = THREE;
 
+THREE.Stats = Stats;
+
 require('three/examples/js/controls/OrbitControls');
+require('three/examples/js/controls/FirstPersonControls');
 // require('three/examples/js/loaders/OBJLoader');
 
 // require('three/examples/js/postprocessing/EffectComposer');
