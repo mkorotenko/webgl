@@ -11,24 +11,19 @@ var renderer = new THREE.WebGLRenderer( { antialias: true } );
 renderer.setPixelRatio( window.devicePixelRatio );
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setClearColor( 0x000000, 1 );
+renderer.shadowMapEnabled = true;
 document.body.appendChild( renderer.domElement );
 
 var orbit = new THREE.OrbitControls( camera, renderer.domElement );
 orbit.enablezoom = false;
 
-var light;
-light = new THREE.PointLight( 0xffffff, 1, 0 );
-light.position.set( 0, 200, 0 );
-
-scene.add( light );
-
 new sceneBuilder(scene);
 
- var stats = new THREE.Stats();
- stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
- document.body.appendChild( stats.dom );
+var stats = new THREE.Stats();
+stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+document.body.appendChild( stats.dom );
 
- var render = function () {
+var render = function () {
 
     requestAnimationFrame( render );
     stats.begin();
@@ -36,8 +31,9 @@ new sceneBuilder(scene);
     renderer.render( scene, camera );
 
     stats.end();
+
 };
- 
+
 window.addEventListener( 'resize', function () {
 
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -48,4 +44,3 @@ window.addEventListener( 'resize', function () {
 }, false );
 
 render();
- 

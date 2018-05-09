@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import Stats from './stats';
+
 global.THREE = THREE;
 
 THREE.Stats = Stats;

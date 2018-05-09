@@ -1,74 +1,31 @@
 import THREE from './three';
-
-function updateGroupGeometry( mesh, geometry ) {
-
-	mesh.children[ 0 ].geometry.dispose();
-	mesh.children[ 1 ].geometry.dispose();
-
-	mesh.children[ 0 ].geometry = new THREE.WireframeGeometry( geometry );
-	mesh.children[ 1 ].geometry = geometry;
-
-	// these do not update nicely together if shared
-
-}
-
-const BoxBufferGeometry = function ( mesh ) {
-
-    var data = {
-        width: 15,
-        height: 15,
-        depth: 15,
-        widthSegments: 1,
-        heightSegments: 1,
-        depthSegments: 1
-    };
-
-    function generateGeometry() {
-
-        updateGroupGeometry( mesh,
-            new THREE.BoxBufferGeometry(
-                data.width, data.height, data.depth, data.widthSegments, data.heightSegments, data.depthSegments
-            )
-        );
-
-    }
-
-    generateGeometry();
-
-}
-
+import figures from './figures'
 class sceneBuilder {
     constructor(scene) {
-        var mesh = new THREE.Object3D();
 
-        mesh.add( new THREE.LineSegments(
-        
-            new THREE.Geometry(),
-        
-            new THREE.LineBasicMaterial( {
-                color: 0xffffff,
-                transparent: true,
-                opacity: 0.5
-            } )
-        
-        ) );
-        
-        mesh.add( new THREE.Mesh(
-        
-            new THREE.Geometry(),
-        
-            new THREE.MeshPhongMaterial( {
-                color: 0x156289,
-                emissive: 0x072534,
-                side: THREE.DoubleSide,
-                flatShading: true
-            } )
-        
-        ) );
-        
-        BoxBufferGeometry(mesh);
-        
-        scene.add( mesh );
+        var planeGeometry = new THREE.PlaneGeometry(50, 20, 10, 1);
+        var planeMaterial = new THREE.MeshLambertMaterial({color: 0xffffff});
+        var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+        plane.receiveShadow = true;
+        // rotate and position the plane
+        plane.rotation.x = -0.5 * Math.PI;
+        plane.position.x = 15;
+        plane.position.y = -5;
+        plane.position.z = 0;
+        // add the plane to the scene
+        scene.add(plane);
+        // add subtle ambient lighting
+        var ambientLight = new THREE.AmbientLight(0x0c0c0c);
+        scene.add(ambientLight);
+        // add spotlight for the shadows
+        var spotLight = new THREE.SpotLight(0xffffff);
+        spotLight.position.set(-40, 60, -10);
+        spotLight.castShadow = true;
+        scene.add(spotLight);
+
+        scene.add(figures.sphere());
+
+        scene.add( figures.wireBox({width: 20, height: 10, depth: 5}) );
     }
 }
 
