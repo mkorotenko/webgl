@@ -1,46 +1,10 @@
 import THREE from './three';
+import sceneBuilder from './scene';
 
 console.info('THREE', THREE)
 
-function updateGroupGeometry( mesh, geometry ) {
-
-	mesh.children[ 0 ].geometry.dispose();
-	mesh.children[ 1 ].geometry.dispose();
-
-	mesh.children[ 0 ].geometry = new THREE.WireframeGeometry( geometry );
-	mesh.children[ 1 ].geometry = geometry;
-
-	// these do not update nicely together if shared
-
-}
-
-const BoxBufferGeometry = function ( mesh ) {
-
-    var data = {
-        width: 15,
-        height: 15,
-        depth: 15,
-        widthSegments: 1,
-        heightSegments: 1,
-        depthSegments: 1
-    };
-
-    function generateGeometry() {
-
-        updateGroupGeometry( mesh,
-            new THREE.BoxBufferGeometry(
-                data.width, data.height, data.depth, data.widthSegments, data.heightSegments, data.depthSegments
-            )
-        );
-
-    }
-
-    generateGeometry();
-
-}
-
 var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 50 );
+var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 150 );
 camera.position.z = 30;
 
 var renderer = new THREE.WebGLRenderer( { antialias: true } );
@@ -48,90 +12,32 @@ renderer.setPixelRatio( window.devicePixelRatio );
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setClearColor( 0x000000, 1 );
 document.body.appendChild( renderer.domElement );
-// var renderer = new THREE.WebGLRenderer({ antialias: true });
-// renderer.setSize( window.innerWidth, window.innerHeight );
-// document.body.appendChild( renderer.domElement );
 
-// var orbit = new THREE.OrbitControls( camera, renderer.domElement );
-// orbit.enablezoom = false;
-var camControls = new THREE.FirstPersonControls(camera);
-camControls.lookSpeed = 0.4;
-camControls.movementSpeed = 20;
-camControls.noFly = true;
-camControls.lookVertical = true;
-camControls.constrainVertical = true;
-camControls.verticalMin = 1.0;
-camControls.verticalMax = 2.0;
-camControls.lon = -150;
-camControls.lat = 120;
+var orbit = new THREE.OrbitControls( camera, renderer.domElement );
+orbit.enablezoom = false;
 
-var lights = [];
-lights[ 0 ] = new THREE.PointLight( 0xffffff, 1, 0 );
-// lights[ 1 ] = new THREE.PointLight( 0xffffff, 1, 0 );
-// lights[ 2 ] = new THREE.PointLight( 0xffffff, 1, 0 );
+var light;
+light = new THREE.PointLight( 0xffffff, 1, 0 );
+light.position.set( 0, 200, 0 );
 
-lights[ 0 ].position.set( 0, 200, 0 );
-// lights[ 1 ].position.set( 100, 200, 100 );
-// lights[ 2 ].position.set( - 100, - 200, - 100 );
+scene.add( light );
 
-scene.add( lights[ 0 ] );
-// scene.add( lights[ 1 ] );
-// scene.add( lights[ 2 ] );
-
-var mesh = new THREE.Object3D();
-
-mesh.add( new THREE.LineSegments(
-
-    new THREE.Geometry(),
-
-    new THREE.LineBasicMaterial( {
-        color: 0xffffff,
-        transparent: true,
-        opacity: 0.5
-    } )
-
-) );
-
-mesh.add( new THREE.Mesh(
-
-    new THREE.Geometry(),
-
-    new THREE.MeshPhongMaterial( {
-        color: 0x156289,
-        emissive: 0x072534,
-        side: THREE.DoubleSide,
-        flatShading: true
-    } )
-
-) );
-
-//var options = chooseFromHash( mesh );
-BoxBufferGeometry(mesh);
-
-scene.add( mesh );
+new sceneBuilder(scene);
 
  var stats = new THREE.Stats();
- stats.showPanel( 1 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+ stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
  document.body.appendChild( stats.dom );
 
-var prevFog = false;
-var clock = new THREE.Clock();
-var render = function () {
+ var render = function () {
 
     requestAnimationFrame( render );
+    stats.begin();
 
-    //if ( ! options.fixed ) {
-         stats.begin();
-        mesh.rotation.x += 0.005;
-        mesh.rotation.y += 0.005;
-
-    //}
-
-    camControls.update(clock.getDelta());
     renderer.render( scene, camera );
-     stats.end();
-};
 
+    stats.end();
+};
+ 
 window.addEventListener( 'resize', function () {
 
     camera.aspect = window.innerWidth / window.innerHeight;
