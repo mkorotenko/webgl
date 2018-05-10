@@ -5,6 +5,7 @@ const GUI = function(sceneControl) {
     var gui = new dat.gui.GUI();
 
     gui.add(sceneControl, 'run');
+    gui.add(sceneControl, 'count').min(0).max(50).step(1);
     gui.add(sceneControl, 'reset');
     // var obj = {
     //     message: 'Hello World',

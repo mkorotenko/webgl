@@ -29,13 +29,14 @@ class sceneBuilder {
 
         scene.add( figures.wireBox({width: 20, height: 10, depth: 20}) );
 
-        this.resetSpheres();
-
         this.sceneControl = {
             run: false,
-            reset: this.resetSpheres.bind(this)
+            reset: this.resetSpheres.bind(this),
+            count: 10
         }
         GUI(this.sceneControl)
+
+        this.resetSpheres();
 
         console.info('scene', this)
 
@@ -54,7 +55,7 @@ class sceneBuilder {
         }
         const spheres = this.spheres = [];
 
-        for (let i=0; i<10; i++)
+        for (let i=0; i<this.sceneControl.count; i++)
         spheres.push(
             figures.sphere()
                 .castToGroup()
