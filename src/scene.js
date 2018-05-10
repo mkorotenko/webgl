@@ -29,6 +29,29 @@ class sceneBuilder {
 
         scene.add( figures.wireBox({width: 20, height: 10, depth: 20}) );
 
+        this.resetSpheres();
+
+        this.sceneControl = {
+            run: false,
+            reset: this.resetSpheres.bind(this)
+        }
+        GUI(this.sceneControl)
+
+        console.info('scene', this)
+
+        setInterval(this.calculateScene.bind(this),10)
+    }
+
+    resetSpheres() {
+
+        if (!this.scene) {
+            console.error('resetSpheres error scene not assigned');
+            return
+        }
+
+        if (this.spheres) {
+            this.spheres.forEach(o => this.scene.remove(o));
+        }
         const spheres = this.spheres = [];
 
         for (let i=0; i<10; i++)
@@ -43,21 +66,8 @@ class sceneBuilder {
             s.position.x = Math.random() * 19 - 10;
             s.position.y = Math.random() * 9 - 5;
             s.position.z = Math.random() * 19 - 10;
-            scene.add(s);
+            this.scene.add(s);
         });
-
-        this.sceneControl = {
-            run: false,
-            reset: this.resetSpheres.bind(this)
-        }
-        GUI(this.sceneControl)
-
-        console.info('scene', this)
-
-        setInterval(this.calculateScene.bind(this),10)
-    }
-
-    resetSpheres() {
 
     }
 
