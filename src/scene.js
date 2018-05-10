@@ -1,7 +1,11 @@
-import THREE from './three';
+import THREE from './three'
 import figures from './figures'
+import GUI from './gui'
+
 class sceneBuilder {
     constructor(scene) {
+
+        this.scene = scene;
 
         var planeGeometry = new THREE.PlaneGeometry(50, 50, 1, 1);
         var planeMaterial = new THREE.MeshLambertMaterial({color: 0xffffff});
@@ -25,7 +29,7 @@ class sceneBuilder {
 
         scene.add( figures.wireBox({width: 20, height: 10, depth: 20}) );
 
-        const spheres = [];
+        const spheres = this.spheres = [];
 
         for (let i=0; i<10; i++)
         spheres.push(
@@ -33,7 +37,7 @@ class sceneBuilder {
                 .castToGroup()
                 .setDirectionArrow());
 
-        console.info('sphere', spheres[0])
+        console.info('spheres', spheres)
 
         spheres.forEach(s => {
             s.position.x = Math.random() * 19 - 10;
@@ -42,14 +46,27 @@ class sceneBuilder {
             scene.add(s);
         });
 
-        this.running = false;
+        this.sceneControl = {
+            run: false,
+            reset: this.resetSpheres.bind(this)
+        }
+        GUI(this.sceneControl)
 
         console.info('scene', this)
+
+        setInterval(this.calculateScene.bind(this),10)
+    }
+
+    resetSpheres() {
+
     }
 
     calculateScene() {
-        if (this.running)
-            spheres.forEach(s => s.position.add(s.userData.direction))
+        if (this.sceneControl.run) {
+            this.spheres.forEach(s => {
+                s.position.add(s.userData.direction.clone().multiplyScalar(0.1))
+            })
+        }
     }
 
 }
