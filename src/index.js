@@ -1,5 +1,6 @@
 import THREE from './three';
 import sceneBuilder from './scene';
+import * as dat from 'dat.gui';
 
 console.info('THREE', THREE)
 
