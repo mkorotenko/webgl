@@ -164,8 +164,8 @@ export default {
         sphere.castShadow = true;
 
         sphere.userData.direction = this.randomVector(data.radius + 2);
-        // sphere.userData.speed = sphere.userData.direction.length();
-        // sphere.userData.direction.normalize();
+        sphere.userData.speed = sphere.userData.direction.length();
+        sphere.userData.direction.normalize();
 
         return sphere;
     }
