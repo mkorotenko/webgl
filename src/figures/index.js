@@ -1,6 +1,46 @@
 import THREE from '../three';
 
+THREE.Object3D.prototype.castToGroup = function() {
+    
+    const mesh = new THREE.Object3D();
+    
+    mesh.add(this);
+    mesh.children[ 0 ].geometry = this.geometry;
+
+    return mesh;
+}
+
+THREE.Object3D.prototype.setDirectionArrow = function() {
+    
+    const commonObject = this.children[0];
+    const dir = commonObject.userData.direction;
+
+    if (dir) {
+        var origin = commonObject.position;
+        var length = commonObject.userData.speed;
+        var hex = 0xffff00;
+    
+        this.add(new THREE.ArrowHelper( dir, origin, length, hex ));
+    }
+
+    return this;
+}
+
 export default {
+
+    randomVector: function (_data) {
+        const lengthLimit = _data || 3;
+        const result = new THREE.Vector3( 
+            Math.random() - 0.5,
+            Math.random() - 0.5,
+            Math.random() - 0.5
+        );
+
+        result.normalize();
+        result.multiplyScalar(lengthLimit);
+
+        return result;
+    },
 
     box: function ( _data ) {
 
@@ -26,7 +66,7 @@ export default {
         // // add the cube to the scene
         // scene.add(cube);
                         
-        var mesh = new THREE.Object3D();
+        const mesh = new THREE.Object3D();
     
         mesh.add( new THREE.LineSegments(
         
@@ -61,7 +101,7 @@ export default {
         mesh.children[ 0 ].geometry = new THREE.WireframeGeometry( geometry );
         mesh.children[ 1 ].geometry = geometry;
     
-        console.info('box', mesh)
+        // console.info('box', mesh)
     
         return mesh;
     
@@ -102,7 +142,7 @@ export default {
     
         mesh.castShadow = true;
 
-        console.info('wireBox', mesh)
+        // console.info('wireBox', mesh)
     
         return mesh;
     
@@ -119,11 +159,12 @@ export default {
         var sphereGeometry = new THREE.SphereGeometry(data.radius, data.segments, data.segments);
         var sphereMaterial = new THREE.MeshLambertMaterial({color: 0x7777ff});
         var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-        // position the sphere
-        // sphere.position.x = 20;
-        // sphere.position.y = 0;
-        // sphere.position.z = 2;
+
         sphere.castShadow = true;
+
+        sphere.userData.direction = this.randomVector(data.radius + 2);
+        sphere.userData.speed = sphere.userData.direction.length();
+        sphere.userData.direction.normalize();
 
         return sphere;
     }
