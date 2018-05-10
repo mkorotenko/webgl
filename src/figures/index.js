@@ -3,9 +3,10 @@ import THREE from '../three';
 THREE.Object3D.prototype.castToGroup = function() {
     
     const mesh = new THREE.Object3D();
-    
+
     mesh.add(this);
     mesh.children[ 0 ].geometry = this.geometry;
+    mesh.userData = this.userData;
 
     return mesh;
 }
@@ -163,8 +164,8 @@ export default {
         sphere.castShadow = true;
 
         sphere.userData.direction = this.randomVector(data.radius + 2);
-        sphere.userData.speed = sphere.userData.direction.length();
-        sphere.userData.direction.normalize();
+        // sphere.userData.speed = sphere.userData.direction.length();
+        // sphere.userData.direction.normalize();
 
         return sphere;
     }

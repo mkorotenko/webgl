@@ -42,8 +42,16 @@ class sceneBuilder {
             scene.add(s);
         });
 
-        console.info('scene', scene)
+        this.running = false;
+
+        console.info('scene', this)
     }
+
+    calculateScene() {
+        if (this.running)
+            spheres.forEach(s => s.position.add(s.userData.direction))
+    }
+
 }
 
 export default sceneBuilder;
