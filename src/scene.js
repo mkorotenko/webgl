@@ -7,17 +7,18 @@ class sceneBuilder {
 
         this.scene = scene;
 
-        var planeGeometry = new THREE.PlaneGeometry(50, 50, 1, 1);
-        var planeMaterial = new THREE.MeshLambertMaterial({color: 0xffffff});
-        var plane = new THREE.Mesh(planeGeometry, planeMaterial);
-        plane.receiveShadow = true;
-        // rotate and position the plane
-        plane.rotation.x = -0.5 * Math.PI;
-        plane.position.x = 0;
-        plane.position.y = -5;
-        plane.position.z = 0;
-        // add the plane to the scene
-        scene.add(plane);
+        // var planeGeometry = new THREE.PlaneGeometry(50, 50, 1, 1);
+        // var planeMaterial = new THREE.MeshLambertMaterial({color: 0xffffff});
+        // var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+        // plane.receiveShadow = true;
+        // // rotate and position the plane
+        // plane.rotation.x = -0.5 * Math.PI;
+        // plane.position.x = 0;
+        // plane.position.y = -5;
+        // plane.position.z = 0;
+        // // add the plane to the scene
+        // scene.add(plane);
+
         // add subtle ambient lighting
         var ambientLight = new THREE.AmbientLight(0x0c0c0c);
         scene.add(ambientLight);
@@ -29,12 +30,14 @@ class sceneBuilder {
 
         scene.add( figures.wireBox({width: 20, height: 10, depth: 20}) );
 
-        this.resetSpheres();
-
         this.sceneControl = {
             run: false,
+            count: 40,
             reset: this.resetSpheres.bind(this)
         }
+
+        this.resetSpheres();
+
         GUI(this.sceneControl)
 
         console.info('scene', this)
@@ -54,7 +57,7 @@ class sceneBuilder {
         }
         const spheres = this.spheres = [];
 
-        for (let i=0; i<10; i++)
+        for (let i=0; i<this.sceneControl.count; i++)
         spheres.push(
             figures.sphere()
                 .castToGroup()
