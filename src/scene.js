@@ -51,11 +51,14 @@ class sceneBuilder {
             run: false,
             count: 40,
             reset: this.resetSpheres.bind(this)
+        
         }
 
         this.resetSpheres();
 
         GUI(this.sceneControl)
+
+        this.resetSpheres();
 
         console.info('scene', this)
 
