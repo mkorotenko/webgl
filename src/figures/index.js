@@ -1,4 +1,5 @@
 import THREE from '../three';
+import CANNON from 'cannon';
 
 THREE.Object3D.prototype.castToGroup = function() {
     
@@ -167,6 +168,34 @@ export default {
         sphere.userData.speed = sphere.userData.direction.length();
         sphere.userData.direction.normalize();
 
+        // var x = sphereBody.position.x;
+        // var y = sphereBody.position.y;
+        // var z = sphereBody.position.z;
+        var ballShape = new CANNON.Sphere(data.radius);
+        var ballBody = new CANNON.Body({ mass: 1 });
+        // ballBody.position.set(0,5,0);
+        ballBody.linearDamping = 0.9;
+
+        ballBody.addShape(ballShape);
+
+        sphere.userData.body = ballBody;
+        // world.add(ballBody);
+        // scene.add(ballMesh);
+        // ballMesh.castShadow = true;
+        // ballMesh.receiveShadow = true;
+        // balls.push(ballBody);
+        // ballMeshes.push(ballMesh);
+        // getShootDir(shootDirection);
+        // ballBody.velocity.set(  shootDirection.x * shootVelo,
+        //                         shootDirection.y * shootVelo,
+        //                         shootDirection.z * shootVelo);
+
+        // Move the ball outside the player sphere
+        // x += shootDirection.x * (sphereShape.radius*1.02 + ballShape.radius);
+        // y += shootDirection.y * (sphereShape.radius*1.02 + ballShape.radius);
+        // z += shootDirection.z * (sphereShape.radius*1.02 + ballShape.radius);
+        // ballBody.position.set(x,y,z);
+        
         return sphere;
     }
 }
